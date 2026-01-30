@@ -6,6 +6,8 @@ Browse prediction markets, execute trades on-chain, and discover hedging opportu
 
 > **Disclaimer:** This software is provided as-is for educational and experimental purposes. It is not financial advice. Trading prediction markets involves risk of loss. This code has not been audited. Use at your own risk and only with funds you can afford to lose.
 
+📺 **[Watch the video explainer](https://www.youtube.com/watch?v=s_uP802NVTE)**
+
 ## Features
 
 ### Market browsing
@@ -71,6 +73,10 @@ Add the following to your `openclaw.json` under `skills.entries.polyclaw.env`:
   }
 }
 ```
+
+**Where to get the keys:**
+- **Chainstack node** — [Sign up at Chainstack](https://console.chainstack.com) (free tier available, sign up with GitHub, X, or Google)
+- **OpenRouter API key** — [Create key at OpenRouter](https://openrouter.ai/settings/keys)
 
 **Security warning:** Keep only small amounts in this wallet. Withdraw regularly to a secure wallet.
 
@@ -295,7 +301,7 @@ export CHAINSTACK_NODE="https://polygon-mainnet.core.chainstack.com/YOUR_KEY"
 ```
 
 ### "OPENROUTER_API_KEY not set"
-Required for hedge commands. Get a free key at https://openrouter.ai/keys:
+Required for hedge commands. Get a free key at https://openrouter.ai/settings/keys:
 ```bash
 export OPENROUTER_API_KEY="sk-or-v1-..."
 ```
