@@ -1,6 +1,6 @@
-"""OpenRouter LLM client for hedge discovery.
+"""Portkey LLM client for hedge discovery.
 
-Async client for calling LLMs via OpenRouter API.
+Async client for calling LLMs via Portkey API (provider and auth in Portkey Config).
 Used for extracting logical implications between markets.
 """
 
@@ -13,7 +13,7 @@ import httpx
 # CONFIGURATION
 # =============================================================================
 
-OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+PORTKEY_BASE_URL = "https://api.portkey.ai/v1"
 
 # Default model (free tier)
 # Note: Model quality matters - must follow JSON format and reject spurious correlations
@@ -34,29 +34,38 @@ LLM_MAX_RETRIES = 3
 
 class LLMClient:
     """
-    Async client for OpenRouter API.
+    Async client for Portkey API.
 
     Used for:
     - Extracting logical implications between markets
     - Analyzing market relationships for hedge discovery
+
+    Provider and credentials are defined in the Portkey Config (config_id).
     """
 
     def __init__(
         self,
         model: str = DEFAULT_MODEL,
         api_key: str | None = None,
+        config_id: str | None = None,
         timeout: float = LLM_TIMEOUT,
     ):
-        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
+        self.api_key = api_key or os.getenv("PORTKEY_API_KEY")
+        self.config_id = config_id or os.getenv("PORTKEY_CONFIG_ID")
         if not self.api_key:
             raise ValueError(
-                "OPENROUTER_API_KEY not set. "
-                "Get a free key at https://openrouter.ai/keys"
+                "PORTKEY_API_KEY not set. "
+                "Get your API key from https://app.portkey.ai/api-keys"
+            )
+        if not self.config_id:
+            raise ValueError(
+                "PORTKEY_CONFIG_ID not set. "
+                "Create a Config at https://app.portkey.ai/configs and set its ID"
             )
 
         self.model = model
         self.timeout = timeout
-        self.base_url = OPENROUTER_BASE_URL
+        self.base_url = PORTKEY_BASE_URL
 
         self._client: httpx.AsyncClient | None = None
 
@@ -66,8 +75,9 @@ class LLMClient:
             self._client = httpx.AsyncClient(
                 timeout=self.timeout,
                 headers={
-                    "Authorization": f"Bearer {self.api_key}",
                     "Content-Type": "application/json",
+                    "x-portkey-api-key": self.api_key,
+                    "x-portkey-config": self.config_id,
                 },
             )
         return self._client
@@ -150,7 +160,7 @@ def get_llm_client(model: str = DEFAULT_MODEL) -> LLMClient:
     Get LLM client singleton.
 
     Args:
-        model: Model identifier from OpenRouter
+        model: Model identifier (must match the provider in your Portkey Config)
 
     Returns:
         LLMClient instance

@@ -60,7 +60,7 @@ uv sync
 
 ### 2. Configure environment variables
 
-Add the following to your `openclaw.json` under `skills.entries.polyclaw.env`:
+Add the following to your `openclaw.json` under `skills.entries.polyclaw.env`. Both `PORTKEY_API_KEY` and `PORTKEY_CONFIG_ID` go in this same `env` object (installer injects them as environment variables when the skill runs):
 
 ```json
 "polyclaw": {
@@ -68,14 +68,15 @@ Add the following to your `openclaw.json` under `skills.entries.polyclaw.env`:
   "env": {
     "CHAINSTACK_NODE": "https://polygon-mainnet.core.chainstack.com/YOUR_KEY",
     "POLYCLAW_PRIVATE_KEY": "0x...",
-    "OPENROUTER_API_KEY": "sk-or-v1-..."
+    "PORTKEY_API_KEY": "pk-...",
+    "PORTKEY_CONFIG_ID": "pc-..."
   }
 }
 ```
 
 **Where to get the keys:**
 - **Chainstack node** — [Sign up at Chainstack](https://console.chainstack.com) (free tier available, sign up with GitHub, X, or Google)
-- **OpenRouter API key** — [Create key at OpenRouter](https://openrouter.ai/settings/keys)
+- **Portkey** — [API key](https://app.portkey.ai/api-keys), [create a Config](https://app.portkey.ai/configs) (provider and credentials live in the Config)
 
 **Security warning:** Keep only small amounts in this wallet. Withdraw regularly to a secure wallet.
 
@@ -177,7 +178,8 @@ Sells your tokens on the CLOB order book at current market price.
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `CHAINSTACK_NODE` | Yes (trading) | Polygon RPC URL |
-| `OPENROUTER_API_KEY` | Yes (hedge) | OpenRouter API key for LLM |
+| `PORTKEY_API_KEY` | Yes (hedge) | Portkey API key |
+| `PORTKEY_CONFIG_ID` | Yes (hedge) | Portkey Config ID (provider/credentials in [Configs](https://app.portkey.ai/configs)) |
 | `POLYCLAW_PRIVATE_KEY` | Yes (trading) | EVM private key (hex) |
 | `HTTPS_PROXY` | No | Only needed if CLOB orders fail (see [troubleshooting](#clob-order-failed--ip-blocked-by-cloudflare)) |
 | `CLOB_MAX_RETRIES` | No | Max retries for CLOB orders (default: 5) |
@@ -204,7 +206,7 @@ polyclaw/
     ├── contracts.py             # CTF ABI + addresses
     ├── coverage.py              # Coverage calculation + tiers
     ├── gamma_client.py          # Polymarket Gamma API client
-    ├── llm_client.py            # OpenRouter LLM client
+    ├── llm_client.py            # Portkey LLM client
     ├── position_storage.py      # Position JSON storage
     └── wallet_manager.py        # Wallet lifecycle
 ```
@@ -299,10 +301,11 @@ Set the Polygon RPC URL:
 export CHAINSTACK_NODE="https://polygon-mainnet.core.chainstack.com/YOUR_KEY"
 ```
 
-### "OPENROUTER_API_KEY not set"
-Required for hedge commands. Get a free key at https://openrouter.ai/settings/keys:
+### "PORTKEY_API_KEY not set" / "PORTKEY_CONFIG_ID not set"
+Required for hedge commands. Get your [Portkey API key](https://app.portkey.ai/api-keys), then [create a Config](https://app.portkey.ai/configs) (add your LLM provider and credentials there) and copy its ID:
 ```bash
-export OPENROUTER_API_KEY="sk-or-v1-..."
+export PORTKEY_API_KEY="pk-..."
+export PORTKEY_CONFIG_ID="pc-..."
 ```
 
 ### Hedge scan finds 0 results or spurious results
@@ -349,4 +352,4 @@ Based on [polymarket-alpha-bot](https://github.com/chainstacklabs/polymarket-alp
 
 - **Chainstack** — Polygon RPC infrastructure
 - **Polymarket** — Prediction market platform
-- **OpenRouter** — LLM API for hedge discovery
+- **Portkey** — LLM gateway for hedge discovery

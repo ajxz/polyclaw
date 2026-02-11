@@ -109,7 +109,7 @@ uv run python scripts/polyclaw.py hedge analyze <market_id_1> <market_id_2>
 - **Tier 3 (MODERATE):** 85-90% - decent but noticeable risk
 - **Tier 4 (LOW):** <85% - speculative (filtered by default)
 
-**LLM model:** Uses `nvidia/nemotron-nano-9b-v2:free` via OpenRouter. Model selection matters — some models find spurious correlations while others (like DeepSeek R1) have output format issues. Override with `--model <model_id>` if needed.
+**LLM model:** Uses `nvidia/nemotron-nano-9b-v2:free` via Portkey (configure provider in your Portkey Config). Model selection matters — some models find spurious correlations while others (like DeepSeek R1) have output format issues. Override with `--model <model_id>` if needed.
 
 ## Security
 
@@ -122,7 +122,8 @@ For the MVP, the private key is stored in an environment variable for simplicity
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `CHAINSTACK_NODE` | Yes (trading) | Polygon RPC URL |
-| `OPENROUTER_API_KEY` | Yes (hedge) | OpenRouter API key for LLM hedge discovery |
+| `PORTKEY_API_KEY` | Yes (hedge) | Portkey API key |
+| `PORTKEY_CONFIG_ID` | Yes (hedge) | Portkey Config ID (provider/credentials in Config) |
 | `POLYCLAW_PRIVATE_KEY` | Yes (trading) | EVM private key (hex, with or without 0x prefix) |
 | `HTTPS_PROXY` | Recommended | Rotating residential proxy for CLOB (e.g., IPRoyal) |
 | `CLOB_MAX_RETRIES` | No | Max CLOB retries with IP rotation (default: 5) |
